@@ -27,6 +27,8 @@ public class Cube : MonoBehaviour
     }
     private void OnEnable()
     {
+        _sleepTime = new WaitForSeconds(UnityEngine.Random.Range(_minTimeDie, _maxTimeDie));
+        _isColorChanged = false;
         _meshRenderer.material.color = _standartColor;
         if (_coroutine != null)
         {
@@ -42,12 +44,11 @@ public class Cube : MonoBehaviour
             {
                 _meshRenderer.material.color = UnityEngine.Random.ColorHSV();
                 _isColorChanged = true;
-                _sleepTime = new WaitForSeconds(UnityEngine.Random.Range(_minTimeDie, _maxTimeDie));
 
-                if (_coroutine == null)
-                {
-                    _coroutine = StartCoroutine(DeleteDelay());
-                }
+                //if (_coroutine == null)
+                //{
+                _coroutine = StartCoroutine(DeleteDelay());
+                //}
             }
         }
     }

@@ -48,7 +48,6 @@ public class Spavner : MonoBehaviour
         // Возвращаем куб в пул
         _objectPool.PutCube(cube);
         // Деактивируем куб
-        _tempCube.gameObject.SetActive(false);
-        //cube.gameObject.SetActive(false); //Возможное решение проблемы,
+        cube.gameObject.SetActive(false);
     }
 }

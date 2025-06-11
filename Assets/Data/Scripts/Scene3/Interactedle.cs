@@ -2,76 +2,117 @@ using UnityEngine;
 
 public class Interact : MonoBehaviour
 {
-    [SerializeField] private Camera _camera;
-    [SerializeField] private int _sizeAim;
-    [SerializeField] private string _aimChar;
-    [SerializeField] private Transform _startPointRay;
-    [SerializeField] private float _rayDistance;
-    [SerializeField] private Transform _itemPosition;
+    [SerializeField] private Camera _camera; // Камера
+    [SerializeField] private int _sizeAim; // Размер курсора
+    [SerializeField] private string _aimChar; // Символ курсора
+    [SerializeField] private Transform _startPointRay; // Точка начала луча
+    [SerializeField] private float _rayDistance; // Расстояние луча
+    [SerializeField] private Transform _itemPosition; // Точка взятия
+
+    [SerializeField] private float _rotationSpeed; // Скорость вращения
+    [SerializeField] private KeyCode _rotateLeftKey; // Клавиша вращения влево
+    [SerializeField] private KeyCode _rotateRightKey;   // Клавиша вращения вправо
 
 
-    private float _aimPositionDrawX;
-    private float _aimPositionDrawY;
-    private RaycastHit _raycastHit;
-    private Ray _ray;
-    private bool _isHaveItem = false;
-    private CubeScene3 _tempCube;
+    private float _aimPositionDrawX; // Позиция курсора по X
+    private float _aimPositionDrawY; // Позиция курсора по Y
+    private RaycastHit _raycastHit; // Результат луча
+    private Ray _ray; // Луч
+    private bool _isHaveItem = false; // Проверка на наличие предмета
+    private CubeScene3 _tempCube; // Предмет
 
     private void Update()
     {
-        CastRay();
-        TakeItem();
+        CastRay(); // Луч
+        TakeItem(); // Взятие предмета
+
+        if (_isHaveItem)
+        {
+            Rotate(); // Вращение
+        }
     }
+
+    private void Rotate()
+    {
+        // Переменная для хранения величины вращения
+        float rotationAmount = 0f;
+        // Проверяем нажатие клавиши вращения влево (Q)
+        if (Input.GetKey(_rotateLeftKey))
+        {
+            // Если Q зажата - устанавливаем положительное вращение
+            rotationAmount = _rotationSpeed * Time.deltaTime;
+        }
+        // Проверяем нажатие клавиши вращения вправо (E)
+        else if (Input.GetKey(_rotateRightKey))
+        {
+            // Если E зажата - устанавливаем отрицательное вращение
+            rotationAmount = -_rotationSpeed * Time.deltaTime;
+        }
+        //  Если вращение есть (клавиша нажата)
+        if (rotationAmount != 0f)
+        {
+            // Применяем вращение к удерживаемому объекту
+            _tempCube.transform.Rotate(Vector3.up, rotationAmount, Space.World);
+        }
+    }
+
     private void CastRay()
     {
+        // Создаем луч
+        // Начало: позиция _startPointRay
+        // Направление: вперед от камеры
         _ray = new Ray(_startPointRay.position, _camera.transform.forward);
-
+        // Визуализация луча в сцене (видно только в редакторе)
         Debug.DrawRay(_ray.origin, _ray.direction * _rayDistance, Color.red);
     }
+
     private void TakeItem()
     {
+        // Если нажата ЛКМ и предмет не в руке
         if (Input.GetMouseButtonDown(0) && _isHaveItem == false)
         {
+            // Проверяем пересечение луча с объектом
             if (Physics.Raycast(_ray, out _raycastHit, _rayDistance))
             {
-                //if (_raycastHit.transform.TryGetComponent<CubeScene3>(out CubeScene3 cube))
+                // Пытаемся получить компонент куба у объекта
                 if (_raycastHit.transform.TryGetComponent<CubeScene3>(out CubeScene3 cube))
                 {
-                    //_nameObj.text = cube.Name; // подготовка куда к взятию
-                    _tempCube = cube;
-                    _tempCube.PrepereDrag();
-                    Drag();
+                    _tempCube = cube; // Сохраняем куб
+                    _tempCube.PrepereDrag(); // Подготавливаем куб
+                    Drag(); // Взяли предмет в руку
                 }
             }
         }
+        // Если нажата ЛКМ и предмет в руке
         else if (Input.GetMouseButtonDown(0) && _isHaveItem == true)
         {
             {
-                Drop();
+                Drop(); // Отпустили предмет
             }
         }
     }
 
     private void Drop()
     {
-        _isHaveItem = false;
-        _tempCube.PrepereDrop();
-        _tempCube.transform.SetParent(null);
-        _tempCube = null;
+        _isHaveItem = false; // Флаг наличия предмета в руке, отпущен
+        _tempCube.PrepereDrop(); // Возращаем физику предмету
+        _tempCube.transform.SetParent(null); // Снимаем родителя
+        _tempCube = null; // Снимаем ссылку
     }
 
     private void Drag()
     {
-        _isHaveItem = true;
-        _tempCube.transform.position = _itemPosition.position;
-        _tempCube.transform.SetParent(this.transform);
+        _isHaveItem = true; // Флаг наличия предмета в руке, взят
+        _tempCube.transform.position = _itemPosition.position;// Перемещает куб в точку _itemPosition, где находится камера
+        _tempCube.transform.SetParent(this.transform); // Привязываем куб к игроку, для движения вместе с ним
     }
 
     private void OnGUI()
     {
+        // Вычисляем позицию прицела по центру экрана
         _aimPositionDrawX = _camera.pixelWidth / 2 - _sizeAim / 4;
         _aimPositionDrawY = _camera.pixelHeight / 2 - _sizeAim / 2;
-
+        // Рисуем прицел
         GUI.Label(new Rect(_aimPositionDrawX, _aimPositionDrawY, _sizeAim, _sizeAim), _aimChar);
     }
 }

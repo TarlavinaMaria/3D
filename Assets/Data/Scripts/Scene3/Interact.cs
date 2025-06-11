@@ -14,7 +14,8 @@ public class Interact : MonoBehaviour
     [SerializeField] private float _rotationSpeed; // Скорость вращения
     [SerializeField] private KeyCode _rotateLeftKey; // Клавиша вращения влево
     [SerializeField] private KeyCode _rotateRightKey;   // Клавиша вращения вправо
-    [SerializeField] private KeyCode _drop;   // Клавиша вращения вправо
+    [SerializeField] private KeyCode _drop;   // Клавиша броска
+    [SerializeField] private KeyCode _check;   // Клавиша нажатия с предметом
 
 
     private float _aimPositionDrawX; // Позиция курсора по X
@@ -33,7 +34,8 @@ public class Interact : MonoBehaviour
         {
             Rotate(); // Вращение
         }
-        DropWithForse();
+        DropWithForse(); // Бросок 
+        CheckDoor(); // Открытие двери
     }
 
     private void Rotate()
@@ -102,6 +104,22 @@ public class Interact : MonoBehaviour
             }
         }
     }
+    private void CheckDoor()
+    {
+        if (Input.GetKey(_check))
+        {
+            if (Physics.Raycast(_ray, out _raycastHit, _rayDistance))
+            {
+                if (_raycastHit.transform.TryGetComponent<Door>(out Door door) && _tempCube != null)
+                {
+                    Destroy(door.gameObject);
+                    Destroy(_tempCube.gameObject, 0.1f);
+                    Drop();
+                }
+
+            }
+        }
+    }
 
     private void Drop()
     {
@@ -109,6 +127,7 @@ public class Interact : MonoBehaviour
         _tempCube.PrepereDrop(); // Возращаем физику предмету
         _tempCube.transform.SetParent(null); // Снимаем родителя
         _tempCube = null; // Снимаем ссылку
+
     }
 
     private void Drag()

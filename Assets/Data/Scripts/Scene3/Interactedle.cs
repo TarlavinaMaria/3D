@@ -8,10 +8,13 @@ public class Interact : MonoBehaviour
     [SerializeField] private Transform _startPointRay; // Точка начала луча
     [SerializeField] private float _rayDistance; // Расстояние луча
     [SerializeField] private Transform _itemPosition; // Точка взятия
+    [SerializeField] private float _forse; // Точка взятия
+
 
     [SerializeField] private float _rotationSpeed; // Скорость вращения
     [SerializeField] private KeyCode _rotateLeftKey; // Клавиша вращения влево
     [SerializeField] private KeyCode _rotateRightKey;   // Клавиша вращения вправо
+    [SerializeField] private KeyCode _drop;   // Клавиша вращения вправо
 
 
     private float _aimPositionDrawX; // Позиция курсора по X
@@ -30,6 +33,7 @@ public class Interact : MonoBehaviour
         {
             Rotate(); // Вращение
         }
+        DropWithForse();
     }
 
     private void Rotate()
@@ -55,7 +59,14 @@ public class Interact : MonoBehaviour
             _tempCube.transform.Rotate(Vector3.up, rotationAmount, Space.World);
         }
     }
-
+    private void DropWithForse()
+    {
+        if (Input.GetKey(_drop) && _isHaveItem == true)
+        {
+            _tempCube.PrepereDrop();
+            _tempCube.DropWithForse(_camera.transform.forward, _forse);
+        }
+    }
     private void CastRay()
     {
         // Создаем луч

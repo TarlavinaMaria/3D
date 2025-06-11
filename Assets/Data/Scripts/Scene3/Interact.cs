@@ -36,8 +36,22 @@ public class Interact : MonoBehaviour
         }
         DropWithForse(); // Бросок 
         CheckDoor(); // Открытие двери
+        Press();
     }
-
+    private void Press()
+    {
+        if (Input.GetMouseButtonDown(0) && _isHaveItem == false)
+        {
+            if (Physics.Raycast(_ray, out _raycastHit, _rayDistance))
+            {
+                if (_raycastHit.transform.TryGetComponent<Pry>(out Pry pry))
+                {
+                    pry.Press();
+                    Debug.Log("Press");
+                }
+            }
+        }
+    }
     private void Rotate()
     {
         // Переменная для хранения величины вращения

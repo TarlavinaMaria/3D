@@ -11,6 +11,7 @@ public class Quest : MonoBehaviour
             {
                 item.transform.position = transform.position;
                 item.transform.rotation = Quaternion.identity;
+                Destroy(item);
                 Debug.Log("Quest start");
 
             }

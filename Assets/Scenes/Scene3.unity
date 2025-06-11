@@ -614,7 +614,9 @@ MonoBehaviour:
   _startPointRay: {fileID: 813710575}
   _rayDistance: 100
   _itemPosition: {fileID: 917122754}
-  _rotationSpeed: 5000
+  _rotationSpeed: 500
+  _rotateLeftKey: 113
+  _rotateRightKey: 101
 --- !u!1001 &2021985302
 PrefabInstance:
   m_ObjectHideFlags: 0

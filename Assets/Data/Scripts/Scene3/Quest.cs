@@ -5,11 +5,15 @@ public class Quest : MonoBehaviour
     private CubeScene3 _tempCube;
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.TryGetComponent<QuestItem>(out QuestItem questItem))
+        if (other.gameObject.TryGetComponent<CubeScene3>(out CubeScene3 item))
         {
-            questItem.transform.position = transform.position;
-            Debug.Log("Quest start");
+            if (item.IsActivated)
+            {
+                item.transform.position = transform.position;
+                item.transform.rotation = Quaternion.identity;
+                Debug.Log("Quest start");
 
+            }
         }
     }
 }

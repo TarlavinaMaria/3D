@@ -7,6 +7,7 @@ public class CubeScene3 : MonoBehaviour
 {
     private Rigidbody _rigidbody;
     private QuestItem _questItem;
+    public bool IsActivated { get; private set; } = true;
     public string Name { get; private set; } = "Куб";
 
     private void Start()
@@ -19,14 +20,14 @@ public class CubeScene3 : MonoBehaviour
         _rigidbody.useGravity = false;
         _rigidbody.isKinematic = true;
         _rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        _questItem.enabled = false;
+        IsActivated = false;
     }
     public void PrepereDrop()
     {
         _rigidbody.useGravity = true;
         _rigidbody.isKinematic = false;
         _rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
-        _questItem.enabled = true;
+        IsActivated = true;
     }
     public void DropWithForse(Vector3 vectorDirection, float force)
     {

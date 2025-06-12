@@ -41,7 +41,7 @@ public class PlayerMover : MonoBehaviour
         if (hit.collider.TryGetComponent<Domino>(out Domino domino))
         {
             Vector3 pushDirection = hit.moveDirection;
-            domino.Push(pushDirection, 3f); // Пример: сила 3
+            domino.Push(pushDirection, 3f); // Сила 3
         }
     }
 

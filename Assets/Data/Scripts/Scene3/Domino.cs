@@ -37,4 +37,10 @@ public class Domino : MonoBehaviour
             _rigidbody.AddForce(direction * force, ForceMode.Impulse);
         }
     }
+    public void AlignUpright(Vector3 position)
+    {
+        transform.position = position;
+        transform.rotation = Quaternion.identity;
+    }
+
 }

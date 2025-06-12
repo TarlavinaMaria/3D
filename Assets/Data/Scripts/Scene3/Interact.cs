@@ -16,6 +16,8 @@ public class Interact : MonoBehaviour
     [SerializeField] private KeyCode _rotateRightKey;   // Клавиша вращения вправо
     [SerializeField] private KeyCode _drop;   // Клавиша броска
     [SerializeField] private KeyCode _check;   // Клавиша нажатия с предметом
+    [SerializeField] private KeyCode _resetDominoKey; // Клавиша выравнивания
+
 
 
     private float _aimPositionDrawX; // Позиция курсора по X
@@ -40,6 +42,12 @@ public class Interact : MonoBehaviour
         DropWithForse(); // Бросок 
         CheckDoor(); // Открытие двери
         Press();
+
+        if (_isHaveItem && _tempDomino != null && Input.GetKeyDown(_resetDominoKey))
+        {
+            _tempDomino.AlignUpright(_itemPosition.position);
+        }
+
     }
     private void Press()
     {

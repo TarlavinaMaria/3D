@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Domino : MonoBehaviour
 {
+    //Методы аналогичные кубу
     private Rigidbody _rigidbody;
     public bool IsActivated { get; private set; } = true;
 
@@ -14,10 +15,9 @@ public class Domino : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-
     public void PickUp(Transform parent, Vector3 position)
     {
-        //
+
         IsActivated = false;
         _rigidbody.useGravity = false;
         _rigidbody.isKinematic = true;

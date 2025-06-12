@@ -25,6 +25,9 @@ public class Interact : MonoBehaviour
     private bool _isHaveItem = false; // Проверка на наличие предмета
     private CubeScene3 _tempCube; // Предмет
 
+    private Domino _tempDomino; // Временная переменная для домино
+
+
     private void Update()
     {
         CastRay(); // Луч
@@ -79,8 +82,20 @@ public class Interact : MonoBehaviour
     {
         if (Input.GetKey(_drop) && _isHaveItem == true)
         {
-            _tempCube.PrepereDrop();
-            _tempCube.DropWithForse(_camera.transform.forward, _forse);
+            if (_tempCube != null)
+            {
+                _tempCube.PrepereDrop();
+                _tempCube.DropWithForse(_camera.transform.forward, _forse);
+            }
+            else if (_tempDomino != null)
+            {
+                _tempDomino.Place();
+                _tempDomino.Push(_camera.transform.forward, _forse);
+            }
+
+            _tempCube = null;
+            _tempDomino = null;
+            _isHaveItem = false;
         }
     }
     private void CastRay()
@@ -108,6 +123,14 @@ public class Interact : MonoBehaviour
                     _tempCube.PrepereDrag(); // Подготавливаем куб
                     Drag(); // Взяли предмет в руку
                 }
+                // Если это Domino — берем его
+                else if (_raycastHit.transform.TryGetComponent<Domino>(out Domino domino))
+                {
+                    _tempDomino = domino;
+                    _tempDomino.PickUp(transform, _itemPosition.position);
+                    _isHaveItem = true;
+                }
+
             }
         }
         // Если нажата ЛКМ и предмет в руке
@@ -117,6 +140,7 @@ public class Interact : MonoBehaviour
                 Drop(); // Отпустили предмет
             }
         }
+
     }
     private void CheckDoor()
     {
@@ -137,10 +161,19 @@ public class Interact : MonoBehaviour
 
     private void Drop()
     {
-        _isHaveItem = false; // Флаг наличия предмета в руке, отпущен
-        _tempCube.PrepereDrop(); // Возращаем физику предмету
-        _tempCube.transform.SetParent(null); // Снимаем родителя
-        _tempCube = null; // Снимаем ссылку
+        _isHaveItem = false;
+
+        if (_tempCube != null)
+        {
+            _tempCube.PrepereDrop();
+            _tempCube.transform.SetParent(null);
+            _tempCube = null;
+        }
+        else if (_tempDomino != null)
+        {
+            _tempDomino.Place();
+            _tempDomino = null;
+        }
 
     }
 

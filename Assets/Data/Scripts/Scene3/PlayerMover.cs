@@ -28,11 +28,20 @@ public class PlayerMover : MonoBehaviour
     private void FixedUpdate()
     {
         // Получаем направление по вертикали, которое вводит игрок
-        _directionVertical = Input.GetAxis(Vertical); 
+        _directionVertical = Input.GetAxis(Vertical);
         _directionHorizontal = Input.GetAxis(Horizontal);
         // Вычисляем вектор движения
         _move = transform.forward * _directionVertical + transform.right * _directionHorizontal;
         // Передаем вектор движения контроллеру, двигаем персонажа
         _characterController.Move(_move * _speed * Time.deltaTime);
     }
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.TryGetComponent<Domino>(out Domino domino))
+        {
+            Vector3 pushDirection = hit.moveDirection;
+            domino.Push(pushDirection, 3f); // Пример: сила 3
+        }
+    }
+
 }

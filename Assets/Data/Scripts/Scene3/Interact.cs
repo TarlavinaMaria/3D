@@ -42,21 +42,23 @@ public class Interact : MonoBehaviour
         DropWithForse(); // Бросок 
         CheckDoor(); // Открытие двери
         Press();
-
+        // Выравнивание
         if (_isHaveItem && _tempDomino != null && Input.GetKeyDown(_resetDominoKey))
         {
-            _tempDomino.AlignUpright(_itemPosition.position);
+            _tempDomino.AlignUpright(_itemPosition.position); // Выравнивание домино
         }
 
     }
     private void Press()
     {
+        // Если нажата ЛКМ
         if (Input.GetMouseButtonDown(0) && _isHaveItem == false)
         {
             if (Physics.Raycast(_ray, out _raycastHit, _rayDistance))
             {
                 if (_raycastHit.transform.TryGetComponent<Pry>(out Pry pry))
                 {
+                    // Подключаем анимацию для рычага
                     pry.Press();
                     Debug.Log("Press");
                 }
@@ -100,10 +102,6 @@ public class Interact : MonoBehaviour
                 _tempDomino.Place();
                 _tempDomino.Push(_camera.transform.forward, _forse);
             }
-
-            _tempCube = null;
-            _tempDomino = null;
-            _isHaveItem = false;
         }
     }
     private void CastRay()
@@ -134,9 +132,9 @@ public class Interact : MonoBehaviour
                 // Если это Domino — берем его
                 else if (_raycastHit.transform.TryGetComponent<Domino>(out Domino domino))
                 {
-                    _tempDomino = domino;
-                    _tempDomino.PickUp(transform, _itemPosition.position);
-                    _isHaveItem = true;
+                    _tempDomino = domino; // Сохраняем домино
+                    _tempDomino.PickUp(transform, _itemPosition.position); // Подготавливаем домино
+                    _isHaveItem = true; // Предмет в руке
                 }
 
             }
@@ -152,12 +150,14 @@ public class Interact : MonoBehaviour
     }
     private void CheckDoor()
     {
+        // Проверяем нажатие клавиши открытия двери
         if (Input.GetKey(_check))
         {
             if (Physics.Raycast(_ray, out _raycastHit, _rayDistance))
             {
                 if (_raycastHit.transform.TryGetComponent<Door>(out Door door) && _tempCube != null)
                 {
+                    // уничтожаем дверь и куб
                     Destroy(door.gameObject);
                     Destroy(_tempCube.gameObject, 0.1f);
                     Drop();
@@ -170,13 +170,14 @@ public class Interact : MonoBehaviour
     private void Drop()
     {
         _isHaveItem = false;
-
+        // Если предмет в руке куб
         if (_tempCube != null)
         {
             _tempCube.PrepereDrop();
             _tempCube.transform.SetParent(null);
             _tempCube = null;
         }
+        // Если предмет в руке домино
         else if (_tempDomino != null)
         {
             _tempDomino.Place();

@@ -37,6 +37,7 @@ public class PlayerMover : MonoBehaviour
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        // Если столкнулись с объектом Domino
         if (hit.collider.TryGetComponent<Domino>(out Domino domino))
         {
             Vector3 pushDirection = hit.moveDirection;

@@ -6,16 +6,19 @@ using UnityEngine;
 public class Domino : MonoBehaviour
 {
     private Rigidbody _rigidbody;
-    private bool _isHeld = false;
+    public bool IsActivated { get; private set; } = true;
 
     private void Awake()
     {
+        // Получаем компонент
         _rigidbody = GetComponent<Rigidbody>();
     }
 
+
     public void PickUp(Transform parent, Vector3 position)
     {
-        _isHeld = true;
+        //
+        IsActivated = false;
         _rigidbody.useGravity = false;
         _rigidbody.isKinematic = true;
         transform.SetParent(parent);
@@ -24,7 +27,7 @@ public class Domino : MonoBehaviour
 
     public void Place()
     {
-        _isHeld = false;
+        IsActivated = true;
         _rigidbody.isKinematic = false;
         _rigidbody.useGravity = true;
         transform.SetParent(null);
@@ -32,13 +35,12 @@ public class Domino : MonoBehaviour
 
     public void Push(Vector3 direction, float force)
     {
-        if (!_isHeld)
-        {
-            _rigidbody.AddForce(direction * force, ForceMode.Impulse);
-        }
+        // Добавляем силу. Импульс
+        _rigidbody.AddForce(direction * force, ForceMode.Impulse);
     }
     public void AlignUpright(Vector3 position)
     {
+        // Для выравнивания домино
         transform.position = position;
         transform.rotation = Quaternion.identity;
     }

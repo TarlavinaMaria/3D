@@ -15,22 +15,23 @@ public class Domino : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    public void PickUp(Transform parent, Vector3 position)
+    public void PickUp()
     {
-
+        //Подбираем 
         IsActivated = false;
         _rigidbody.useGravity = false;
         _rigidbody.isKinematic = true;
-        transform.SetParent(parent);
-        transform.position = position;
+        _rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        IsActivated = false;
     }
 
     public void Place()
     {
-        IsActivated = true;
-        _rigidbody.isKinematic = false;
+        //Ставим
         _rigidbody.useGravity = true;
-        transform.SetParent(null);
+        _rigidbody.isKinematic = false;
+        _rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+        IsActivated = true;
     }
 
     public void Push(Vector3 direction, float force)

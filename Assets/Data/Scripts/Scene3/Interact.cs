@@ -133,8 +133,8 @@ public class Interact : MonoBehaviour
                 else if (_raycastHit.transform.TryGetComponent<Domino>(out Domino domino))
                 {
                     _tempDomino = domino; // Сохраняем домино
-                    _tempDomino.PickUp(transform, _itemPosition.position); // Подготавливаем домино
-                    _isHaveItem = true; // Предмет в руке
+                    _tempDomino.PickUp(); // Подготавливаем домино
+                    Drag();
                 }
 
             }
@@ -181,6 +181,7 @@ public class Interact : MonoBehaviour
         else if (_tempDomino != null)
         {
             _tempDomino.Place();
+            _tempDomino.transform.SetParent(null);
             _tempDomino = null;
         }
 
@@ -189,8 +190,16 @@ public class Interact : MonoBehaviour
     private void Drag()
     {
         _isHaveItem = true; // Флаг наличия предмета в руке, взят
-        _tempCube.transform.position = _itemPosition.position;// Перемещает куб в точку _itemPosition, где находится камера
-        _tempCube.transform.SetParent(this.transform); // Привязываем куб к игроку, для движения вместе с ним
+        if (_tempCube != null)
+        {
+            _tempCube.transform.position = _itemPosition.position;// Перемещает куб в точку _itemPosition, где находится камера
+            _tempCube.transform.SetParent(this.transform); // Привязываем куб к игроку, для движения вместе с ним
+        }
+        else if (_tempDomino != null)
+        {
+            _tempDomino.transform.position = _itemPosition.position;// Перемещает куб в точку _itemPosition, где находится камера
+            _tempDomino.transform.SetParent(this.transform); // Привязываем куб к игроку, для движения вместе с ним
+        }
     }
 
     private void OnGUI()

@@ -5,6 +5,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] Cube4 cube;
     private void Update()
     {
+        // Проверка нажатия клавиши Space для создания куба
         if (Input.GetKeyDown(KeyCode.Space))
         {
             CreateCube();
